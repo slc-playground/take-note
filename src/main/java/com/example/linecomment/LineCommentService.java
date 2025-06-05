@@ -4,30 +4,36 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.markup.HighlighterLayer;
+import com.intellij.openapi.editor.markup.MarkupModel;
+import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service(Service.Level.PROJECT)
 public final class LineCommentService {
-    private static final Logger LOG = Logger.getInstance(LineCommentService.class);
-    private final Project project;
     private final Map<String, List<LineComment>> comments;
     private final Gson gson;
     private static final String NOTES_FILE = "notes.json";
+    private static final Logger LOG = Logger.getInstance(LineCommentService.class);
+    private final Project project;
 
     public LineCommentService(Project project) {
         this.project = project;
@@ -40,22 +46,6 @@ public final class LineCommentService {
         return project.getService(LineCommentService.class);
     }
 
-    private String getUsername() {
-        String username = System.getProperty("user.name");
-        LOG.info("Using username: " + username);
-        return username;
-    }
-
-    private String getRelativePath(VirtualFile file) {
-        String basePath = project.getBasePath();
-        String filePath = file.getPath();
-        
-        if (filePath.startsWith(basePath)) {
-            return filePath.substring(basePath.length());
-        }
-        return filePath;
-    }
-
     public void addComment(@NotNull VirtualFile file, int lineNumber, @NotNull String comment) {
         String relativePath = getRelativePath(file);
         String fileName = file.getName();
@@ -65,7 +55,20 @@ public final class LineCommentService {
         
         List<LineComment> fileComments = comments.computeIfAbsent(relativePath, k -> new ArrayList<>());
         fileComments.add(new LineComment(relativePath, fileName, lineNumber, comment, username));
+        
+        // Yorumları kaydet
         saveComments();
+        LOG.info("Comment saved to notes.json");
+    }
+
+    private String getRelativePath(@NotNull VirtualFile file) {
+        String projectPath = project.getBasePath();
+        String filePath = file.getPath();
+        return filePath.substring(projectPath.length() + 1);
+    }
+
+    private String getUsername() {
+        return System.getProperty("user.name");
     }
 
     public void deleteComment(@NotNull VirtualFile file, int lineNumber) {
@@ -77,6 +80,34 @@ public final class LineCommentService {
                 comments.remove(relativePath);
             }
             saveComments();
+
+            // İlgili editörü bul ve ikonu kaldır
+            Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+            if (editor != null && editor.getDocument().equals(FileDocumentManager.getInstance().getDocument(file))) {
+                MarkupModel markupModel = editor.getMarkupModel();
+                markupModel.removeAllHighlighters();
+                
+                // Kalan yorumların ikonlarını yeniden ekle
+                for (LineComment comment : fileComments) {
+                    int commentLine = comment.getLineNumber();
+                    if (commentLine > 0 && commentLine <= editor.getDocument().getLineCount()) {
+                        LineCommentGutterIconRenderer iconRenderer = new LineCommentGutterIconRenderer(
+                            commentLine,
+                            comment.getComment(),
+                            comment.getUsername(),
+                            comment.getTimestamp(),
+                            file,
+                            project
+                        );
+                        
+                        markupModel.addLineHighlighter(
+                            commentLine - 1,
+                            HighlighterLayer.ADDITIONAL_SYNTAX,
+                            new TextAttributes()
+                        ).setGutterIconRenderer(iconRenderer);
+                    }
+                }
+            }
         }
     }
 
@@ -133,6 +164,34 @@ public final class LineCommentService {
             comments.put(relativePath, newComments);
         }
         saveComments();
+    }
+
+    public void updateLineNumbers(@NotNull VirtualFile file, int changedLine, int lineDiff) {
+        String relativePath = getRelativePath(file);
+        List<LineComment> fileComments = comments.get(relativePath);
+        
+        if (fileComments != null) {
+            boolean updated = false;
+            LOG.info("Updating line numbers for file: " + relativePath);
+            LOG.info("Change occurred at line: " + (changedLine + 1) + ", line difference: " + lineDiff);
+            
+            // Tüm yorumları güncelle
+            for (LineComment comment : fileComments) {
+                int oldLineNumber = comment.getLineNumber();
+                // Eğer yorum, değişikliğin yapıldığı satırdan sonraki bir satırdaysa
+                if (oldLineNumber > changedLine) {
+                    int newLineNumber = oldLineNumber + lineDiff;
+                    comment.setLineNumber(newLineNumber);
+                    updated = true;
+                    LOG.info("Updated comment line number: " + oldLineNumber + " -> " + newLineNumber);
+                }
+            }
+            
+            if (updated) {
+                LOG.info("Saving updated comments to notes.json");
+                saveComments();
+            }
+        }
     }
 
     private void saveComments() {

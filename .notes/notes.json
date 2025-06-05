@@ -1,3 +1,20 @@
 {
-
+  "src/main/java/com/example/linecomment/Deneme.java": [
+    {
+      "filePath": "/src/main/java/com/example/linecomment/Deneme.java",
+      "fileName": "Deneme.java",
+      "lineNumber": -125,
+      "comment": "deneme log satırı",
+      "username": "yunus",
+      "timestamp": 1749154651715
+    },
+    {
+      "filePath": "src/main/java/com/example/linecomment/Deneme.java",
+      "fileName": "Deneme.java",
+      "lineNumber": 10,
+      "comment": "selam",
+      "username": "yunus",
+      "timestamp": 1749158495923
+    }
+  ]
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class LineComment implements Serializable {
     private final String filePath;
     private final String fileName;
-    private final int lineNumber;
+    private int lineNumber;
     private final String comment;
     private final String username;
     private final long timestamp;
@@ -29,6 +29,10 @@ public class LineComment implements Serializable {
 
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     public String getComment() {
