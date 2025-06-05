@@ -1,0 +1,14 @@
+<options>
+  <configurable id="preferences.keymap" configurable_name="Keymap">
+    <option name="add" path="ActionManager" hit="Add Line Comment" />
+    <option name="comment" path="ActionManager" hit="Add Line Comment" />
+    <option name="line" path="ActionManager" hit="Add Line Comment" />
+    <option name="a" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="add" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="comment" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="current" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="line" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="the" path="ActionManager" hit="Add a comment to the current line" />
+    <option name="to" path="ActionManager" hit="Add a comment to the current line" />
+  </configurable>
+</options>
