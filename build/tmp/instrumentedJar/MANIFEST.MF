@@ -1,9 +1,14 @@
 Manifest-Version: 1.0
 Created-By: Gradle 8.14.1
-Build-JVM: 23.0.2 (Homebrew 23.0.2)
-Version: 1.0-SNAPSHOT
-Build-Plugin: Gradle IntelliJ Plugin
-Build-Plugin-Version: 1.17.2
+Version: 0.1.0
+Build-JVM: 21.0.2 (Oracle Corporation 21.0.2+13-58)
 Build-OS: Mac OS X 14.5 aarch64
-Build-SDK: IC-2024.1
+Build-Plugin: IntelliJ Platform Gradle Plugin
+Build-Plugin-Version: 2.0.0
+Platform-Type: IC
+Platform-Version: 2025.1
+Platform-Build: 251.23774.435
+Kotlin-Available: true
+Kotlin-Stdlib-Bundled: true
+Kotlin-Version: 1.9.22
 

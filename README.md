@@ -1,18 +1,26 @@
 ## Bilinen Eksikler
 
-- Yeni bir yorum eklediğimde (Örn: 10. satır) dosyayı kapatıp tekrar açtığımda yorum ikonu bir alt satırda görünüyor (Örn: 11. satır)
+~~Yeni bir yorum eklediğimde (Örn: 10. satır) dosyayı kapatıp tekrar açtığımda yorum ikonu bir alt satırda görünüyor (Örn: 11. satır)~~
 
-- Bir dosyada ilk defa bir satıra yorum eklendikten sonra dosyayı kapatıp açtığımda `notes.json` dosyasına bu kayıt yansımıyor.
-Editörde canlı değişiklik yapmaya devam ettiğimde yorum ikonu yanlış konumlanıyor.
+~~Bir dosyada ilk defa bir satıra yorum eklendikten sonra dosyayı kapatıp açtığımda `notes.json` dosyasına bu kayıt yansımıyor.
+Editörde canlı değişiklik yapmaya devam ettiğimde yorum ikonu yanlış konumlanıyor~~
 
-- Idea başlatıldığında editörde açık olan dosyalar varsa (kapanmadan önce açık kalan dosyalar) bu dosyalara ait yorumlar yüklenmiyor.
-Dosyayı kapatıp açtığımda geri geliyor.
+~~Idea başlatıldığında editörde açık olan dosyalar varsa (kapanmadan önce açık kalan dosyalar) bu dosyalara ait yorumlar yüklenmiyor.
+Dosyayı kapatıp açtığımda geri geliyor.~~
 
-- `notes.json`da kaydı bulunan bir dosyadaki yorum satırından öncesine yeni satırlar eklediğimde editörde canlı olarak yorum ikonu konumlanması doğru çalışıyor.
-Fakat dosyayı kapatıp açtığımda yorum ikonunun eski konumunda kaldığını görüyorum. Güncel lineNumber değeri `notes.json` dosyasına yansımamış oluyor.
+~~`notes.json`da kaydı bulunan bir dosyadaki yorum satırından öncesine yeni satırlar eklediğimde editörde canlı olarak yorum ikonu konumlanması doğru çalışıyor.
+Fakat dosyayı kapatıp açtığımda yorum ikonunun eski konumunda kaldığını görüyorum. Güncel lineNumber değeri `notes.json` dosyasına yansımamış oluyor.~~
 
 
 ## Yapılacaklar
+
+- Plugin için bir ikon belirlenmeli. Şu anda default plugin ikonu ile geliyor.
+
+- Yorum bilgisine (varsa) yorumu yazan kullanıcının git username bilgisi eklenecek.
+
+- Arşive taşınan yorumlar `.idea/archieve.json` dosyasında saklanıyor. Bu dosya `.notes` klasörü altına alınmalı.
+
+- Arşive taşınan yorum içeriğine silinen kod satırını yazan kullanıcının (varsa) git username bilgisi eklenecek. Ek olarak branch adı da dahil edilebilir.
 
 - Yorumun tarih değerinin görüntülenmesinde yıl bilgisine de yer vererek şöyle bir düzenleme yapılabilir.
 Bulunduğumuz takvim yılına ait bir yorum ise yıl bilgisi gösterilmesin ve gün değeri görünsün. Geçmiş yıllara ait ise yıl değeri yazarken gün bilgisi yazmasın.

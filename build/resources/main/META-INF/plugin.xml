@@ -1,21 +1,27 @@
 <idea-plugin>
-  <version>1.0-SNAPSHOT</version>
-  <idea-version since-build="241" until-build="251.*" />
-  <id>com.example.line-comment</id>
+  <version>0.1.0</version>
+  <id>com.yuunus90.line-comment</id>
   <name>Line Comment</name>
-  <vendor>Your Name</vendor>
-  <description>Add comments to specific code lines with icons</description>
+  <vendor>yuunus90</vendor>
+  <description>Add comments to specific code lines with icons<![CDATA[Add comments to specific code lines with icons]]></description>
+  <idea-version since-build="251" until-build="251.*" />
   <depends>com.intellij.modules.platform</depends>
   <extensions defaultExtensionNs="com.intellij">
-    <gutterIconRenderer implementation="com.example.linecomment.LineCommentGutterIconRenderer" />
-    <projectService serviceImplementation="com.example.linecomment.LineCommentService" />
-    <projectService serviceImplementation="com.example.linecomment.CommentArchiveService" />
-    <postStartupActivity implementation="com.example.linecomment.LineCommentStartupActivity" />
+    <gutterIconRenderer implementation="com.yuunus90.linecomment.LineCommentGutterIconRenderer" />
+    <projectService serviceImplementation="com.yuunus90.linecomment.LineCommentService" />
+    <projectService serviceImplementation="com.yuunus90.linecomment.CommentArchiveService" />
+    <postStartupActivity implementation="com.yuunus90.linecomment.LineCommentStartupActivity" />
   </extensions>
   <actions>
-    <action id="LineComment.AddComment" class="com.example.linecomment.AddLineCommentAction" text="Add Line Comment" description="Add a comment to the current line">
+    <action id="LineComment.AddComment" class="com.yuunus90.linecomment.AddLineCommentAction" text="Add Line Comment" description="Açıklama satırı ekle" icon="/icons/comment.svg">
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C" />
     </action>
   </actions>
+  <projectListeners>
+    <listener class="com.yuunus90.linecomment.LineCommentFileEditorListener" topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+  </projectListeners>
+  <searchableOptions>
+    <option name="LineComment.AddComment" text="Add Line Comment" description="Açıklama satırı ekle" />
+  </searchableOptions>
 </idea-plugin>
